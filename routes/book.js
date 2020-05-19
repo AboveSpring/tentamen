@@ -20,7 +20,7 @@ getBookById = async (req, res, next) => {
     }
 
     if (!book) {
-      return res.status(404)
+      return res.status(404).json(err)
     }
     return res.status(200).json(book)
   }).catch(error => next(error))

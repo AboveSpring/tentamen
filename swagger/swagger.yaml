@@ -84,6 +84,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ResponseBook"
+        '404':      
+          description: Book not found
         default:
           description: unexpected error
           content:
@@ -141,6 +143,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ResponseBook"
+        '404':      
+          description: Book not found
         default:
           description: unexspected error
           content:
