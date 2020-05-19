@@ -77,7 +77,7 @@ describe('books.get', () => {
 			.end((err, res) => {
 				// Then (something should happen)
 				expect(res.status).to.equal(200);
-				expect(res.body.data).to.eql([expected]);
+				expect(res.body).to.eql([expected]);
 				done();
 			});
 	});
@@ -91,7 +91,7 @@ describe('books.get', () => {
 	// 		.expects('findOne')
 	// 		.withArgs({ "Title": "ring" })
 	// 		.chain('exec')
-	// 		.resolves([expected]);
+	// 		.resolves(expected);
 
 	// 	// When (someting happens)
 	// 	agent
@@ -99,7 +99,7 @@ describe('books.get', () => {
 	// 		.end((err, res) => {
 	// 			// Then (something should happen)
 	// 			expect(res.status).to.equal(200);
-	// 			expect(res.body).to.eql([expected]);
+	// 			expect(res.body).to.eql(expected);
 	// 			done();
 	// 		});
 	// });
@@ -121,11 +121,32 @@ describe('books.get', () => {
 	// 			.end((err, res) => {
 	// 				// Then (something should happen)
 	// 				expect(res.status).to.equal(201);
-	// 				expect(res.body.data).to.eql([expected]);
+	// 				expect(res.body).to.eql(expected);
 	// 				done();
 	// 			});
 	// 	});
 	// })
+
+	// describe('book.delete', ()  => { 
+	// 	it('Should be able to delete a book', (done) => {
+	// 		// Given (preconditions)
+	// 		mock
+	// 		.expects('findByIdAndDelete')
+	// 		.withArgs('5ec391480c552a3554ab49ba')
+	// 		.chain('exec')
+	// 		.resolves('200')
+
+	// 		// When (someting happens)
+	// 		agent
+	// 		.delete('/books/5ec391480c552a3554ab49ba')
+	// 		.send()
+	// 		.end((err,res) => {
+	// 		// Then (something should happen)
+	// 			expect(res.status).to.equal(200);
+	// 			done();
+	// 		});
+	// 	});
+	// });
 });
 
 

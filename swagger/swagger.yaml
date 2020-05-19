@@ -5,14 +5,14 @@ info:
   description: |
     Swagger for Books Api
     
-    [Link to localhost:3000](http://localhost:3000/swagger.yaml)
+    [Link to localhost:3200](http://localhost:3200/swagger.yaml)
     
     
     
   license:
     name: MIT
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:3200
 paths:
   /books:
     get:
@@ -141,8 +141,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ResponseBook"
-        '204':
-          description: Valid request but there is nothing to delete
+        default:
+          description: unexspected error
           content:
             application/json:
               schema:
@@ -164,6 +164,7 @@ components:
         Used: 
           type: boolean
         Location: 
+          type: object
           properties:
             City: 
               type: string
@@ -173,23 +174,35 @@ components:
       allOf:
       - $ref: '#/components/schemas/Book'
       - properties:
-          id:
-            type: integer
           _id:
             type: string
             format: uuid
+          __v:
+            type: integer
+            format: uint32  
     ResponseBooks:
       type: array
       items:
         $ref: "#/components/schemas/ResponseBook"
     Error:
       required:
-        - code
-        - message
+        - error
       properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
+        error:
+          type: object
+          properties:
+            expose:
+              type: boolean
+            statusCode:
+              type: integer
+              format: uint32
+            status:
+              type: integer
+              format: uint32
+            body:
+              title: body as escaped json
+              type: string
+            type:
+              title: fault desciption
+              type: string
     

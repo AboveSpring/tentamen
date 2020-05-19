@@ -9,42 +9,33 @@ getBooks = (req, res, next) => {
     query = Book.find()
   }
   query.exec().then((books) => {
-    return res.send({ success: true, data: books });
+    return res.status(200).json(books);
   }).catch((error) => next(error))
 }
 
 getBookById = async (req, res, next) => {
   await Book.findOne({ _id: req.params.id }, (err, book) => {
     if (err) {
-      return res.status(400).json({ success: false, error: err })
+      return res.status(400).json(err)
     }
 
     if (!book) {
-      return res
-        .status(404)
-        .json({ success: false, error: `Book not found` })
+      return res.status(404)
     }
-    return res.status(200).json({ success: true, data: book })
+    return res.status(200).json(book)
   }).catch(error => next(error))
 }
 
 createBook = (req, res, next) => {
   const body = req.body
   if (!body) {
-    return res.status(400).json({
-      success: false,
-      error: 'You must provide book info',
-    })
+    return res.status(400)
   }
   const book = new Book(body)
   book
     .save()
     .then(() => {
-      return res.status(201).json({
-        success: true,
-        message: 'Book created',
-        data: book,
-      })
+      return res.status(201).json(book)
     })
     .catch(error => next(error))
 }
@@ -73,11 +64,7 @@ updateBook = (req, res, next) => {
     if (status.upserted)
       res.status(201)
     else if (status.nModified)
-      res.status(200).json({
-        success: true,
-        data: body,
-        message: 'Book updated!',
-      })
+      res.status(200).json(body)
     else
       res.status(204)
     res.send()
@@ -87,18 +74,12 @@ updateBook = (req, res, next) => {
 deleteBook = async (req, res, next) => {
   await Book.findOneAndDelete({ _id: req.params.id }, (err, book) => {
     if (err) {
-      return res.status(204).json({ success: false, error: err })
+      return res.status(500).json(err)
     }
     if (!book) {
-      return res
-        .status(404)
-        .json({ success: false, error: `Book not found` })
+      return res.status(404)
     }
-    return res.status(200).json({
-      success: true,
-      data: book,
-      message: 'Book deleted'
-    })
+    return res.status(200).json(book)
   }).catch(error => next(error))
 }
 
