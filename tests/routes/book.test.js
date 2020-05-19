@@ -23,33 +23,110 @@ beforeEach(() => {
 	mock = sinon.mock(Book)
 });
 
-afterEach( () => {
+afterEach(() => {
 	mock.verify();
 });
 
-	const expected = {
-		//...
-	}
+const request = {
 
-describe('books.get', ()  => {
+
+	"Location": {
+		"City": "Redmond",
+		"Street": "156TH AVE NE"
+	},
+	"ISBN": "978-0-321-87758-1",
+	"Title": "ringz",
+	"Author": "Mark Michaelis",
+	"Price": 59.99,
+	"SellerEmail": "someone@someplace.com",
+	"Used": false,
+	
+
+
+}
+
+const expected = {
+
+	"Location": {
+		"City": "Redmond",
+		"Street": "156TH AVE NE"
+	},
+	"_id": "5ec391480c552a3554ab49ba",
+	"ISBN": "978-0-321-87758-1",
+	"Title": "ringz",
+	"Author": "Mark Michaelis",
+	"Price": 59.99,
+	"SellerEmail": "someone@someplace.com",
+	"Used": false,
+	"__v": 0
+}
+
+describe('books.get', () => {
 
 	it('Should return an array of all books', (done) => {
 
 		// Given (preconditions)
 		mock
-		.expects('find')
-		.chain('exec')
-		.resolves([expected]);
+			.expects('find')
+			.chain('exec')
+			.resolves([expected]);
 
 		// When (someting happens)
 		agent
-		.get('/books')
-		.end((err,res) => {
-		// Then (something should happen)
-			expect(res.status).to.equal(200);
-			expect(res.body).to.eql([expected]);
-			done();
-		});
+			.get('/books')
+			.end((err, res) => {
+				// Then (something should happen)
+				expect(res.status).to.equal(200);
+				expect(res.body.data).to.eql([expected]);
+				done();
+			});
 	});
 
+
+
+	// it('Should get a book by title', (done) => {
+
+	// 	// Given (preconditions)
+	// 	mock
+	// 		.expects('findOne')
+	// 		.withArgs({ "Title": "ring" })
+	// 		.chain('exec')
+	// 		.resolves([expected]);
+
+	// 	// When (someting happens)
+	// 	agent
+	// 		.get('/books/?Title=ring')
+	// 		.end((err, res) => {
+	// 			// Then (something should happen)
+	// 			expect(res.status).to.equal(200);
+	// 			expect(res.body).to.eql([expected]);
+	// 			done();
+	// 		});
+	// });
+
+
+	// describe('student.post', () => {
+	// 	it('Should be able to create a book', (done) => {
+	// 		// Given (preconditions)
+	// 		mock
+	// 			.expects('create')
+	// 			.withArgs(request)
+	// 			.chain('exec')
+	// 			.resolves(expected);
+
+	// 		// When (someting happens)
+	// 		agent
+	// 			.post('/books')
+	// 			.send(request)
+	// 			.end((err, res) => {
+	// 				// Then (something should happen)
+	// 				expect(res.status).to.equal(201);
+	// 				expect(res.body.data).to.eql([expected]);
+	// 				done();
+	// 			});
+	// 	});
+	// })
 });
+
+
+

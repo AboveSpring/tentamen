@@ -1,71 +1,195 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: BookLibrary
+  title: Swagger Books
   description: |
-    books available for loan
+    Swagger for Books Api
+    
+    [Link to localhost:3000](http://localhost:3000/swagger.yaml)
+    
+    
+    
   license:
     name: MIT
 servers:
-- url: http://localhost:3000
+  - url: http://localhost:3000
 paths:
   /books:
     get:
-      summary: Lists all books
+      summary: List all books or search by query parameter
       operationId: listBooks
       tags:
-      - books
+        - Books
+      parameters:
+        - in: query
+          description: search for books by query parameter Title
+          name: Title
+          schema:
+            type: string
       responses:
         '200':
           description: Array of books
           content:
             application/json:    
               schema:
-                $ref: "#/components/schemas/ResponseBooks"
+                $ref: '#/components/schemas/ResponseBooks'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a book
+      operationId: createBook
+      tags:
+      - Books
+      requestBody:
+        description: the book to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBook'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /books/{bookId}:
+    get:
+      summary: Info for a specific book
+      operationId: showBookById
+      tags:
+        - Books
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          description: The id of the book to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseBook"
         default:
           description: unexpected error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    put:
+      summary: Update a specific book
+      operationId: updateBookByID
+      tags:
+        - Books
+      parameters:
+      - name: bookId
+        in: path
+        required: true
+        description: The id of the book to retrieve
+        schema:
+          type: string
+      requestBody:
+       description: the book body to change
+       required: true
+       content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Book'  
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseBook"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Error"
+    delete:
+      summary: Delete a specific book
+      operationId: deleteBookByID
+      tags: 
+        - Books
+      parameters: 
+      - name: bookId
+        in: path
+        required: true
+        description: Deletes the book
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Expected respsone to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseBook"
+        '204':
+          description: Valid request but there is nothing to delete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Book: # A single book
-      type: object
+    Book:
       properties:
-# Add properties for your books here   
-    ResponseBook: #Single book response including _id and __v
+        ISBN: 
+          type: string
+        Title: 
+          type: string
+        Author: 
+          type: string
+        Price: 
+          type : number
+        SellerEmail: 
+          type: string
+        Used: 
+          type: boolean
+        Location: 
+          properties:
+            City: 
+              type: string
+            Street: 
+              type: string
+    ResponseBook:
       allOf:
-      - $ref: "#/components/schemas/Book"
+      - $ref: '#/components/schemas/Book'
       - properties:
-          __v:
+          id:
             type: integer
-            format: uint32
           _id:
             type: string
             format: uuid
-    ResponseBooks: #list of books
+    ResponseBooks:
       type: array
       items:
         $ref: "#/components/schemas/ResponseBook"
     Error:
       required:
-        - error
+        - code
+        - message
       properties:
-        error:
-          type: object
-          properties:
-            expose:
-              type: boolean
-            statusCode:
-              type: integer
-              format: uint32
-            status:
-              type: integer
-              format: uint32
-            body:
-              title: body as escaped json
-              type: string
-            type:
-              title: fault desciption
-              type: string
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    
